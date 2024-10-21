@@ -4,9 +4,9 @@
  * @brief define the necessary data structure in deduplication
  * @version 0.1
  * @date 2019-12-19
- * 
+ *
  * @copyright Copyright (c) 2019
- * 
+ *
  */
 
 #ifndef BASICDEDUP_CHUNK_h
@@ -34,7 +34,7 @@ typedef struct {
 } Data_t;
 
 typedef struct {
-    uint8_t chunkHash[CHUNK_HASH_SIZE]; 
+    uint8_t chunkHash[CHUNK_HASH_SIZE];
 } RecipeEntry_t;
 
 typedef struct {
@@ -85,16 +85,16 @@ typedef struct {
 
 typedef struct {
     char containerID[CONTAINER_ID_LENGTH];
-    uint8_t body[MAX_CONTAINER_SIZE]; 
+    uint8_t body[MAX_CONTAINER_SIZE];
     uint32_t currentSize;
 } Container_t;
 
 typedef struct {
     char containerID[CONTAINER_ID_LENGTH];
     uint32_t chunkNum;
-    uint8_t body[MAX_CONTAINER_SIZE]; 
+    uint8_t body[MAX_CONTAINER_SIZE];
     uint32_t currentBodySize;
-    uint8_t header[MAX_CONTAINER_SIZE]; 
+    uint8_t header[MAX_CONTAINER_SIZE];
     uint32_t currentHeaderSize;
 } InmemoryContainer_t;
 
@@ -106,8 +106,8 @@ typedef struct {
 
 typedef struct {
     uint8_t chunkHash[CHUNK_HASH_SIZE];
-    uint8_t containerName[CONTAINER_ID_LENGTH]; 
-    uint32_t chunkOffset; 
+    uint8_t containerName[CONTAINER_ID_LENGTH];
+    uint32_t chunkOffset;
     uint32_t chunkSize;
     uint32_t containerID;
 } DownloadChunkEntry_t;
@@ -117,4 +117,4 @@ typedef struct {
     uint32_t length;
 } RestoreIndexEntry_t;
 
-#endif //BASICDEDUP_CHUNK_h
+#endif // BASICDEDUP_CHUNK_h

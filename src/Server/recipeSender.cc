@@ -1,15 +1,17 @@
 #include "../../include/recipeSender.h"
 
-RecipeSender::RecipeSender(SSLConnection* serverChannel) {
+RecipeSender::RecipeSender(SSLConnection* serverChannel)
+{
     serverChannel_ = serverChannel;
     sendRecipeBatchSize_ = config.GetSendRecipeBatchSize();
 }
 
-RecipeSender::~RecipeSender() {
-
+RecipeSender::~RecipeSender()
+{
 }
 
-void RecipeSender::Run(ClientVar *curClient) {
+void RecipeSender::Run(ClientVar* curClient)
+{
     SendMsgBuffer_t* sendRecipeBuffer = &curClient->_sendRecipeBuf;
     SSL* clientSSL = curClient->_clientSSL;
     uint32_t recvSize = 0;
@@ -18,7 +20,7 @@ void RecipeSender::Run(ClientVar *curClient) {
     // 等待edge回应
     // ------------------------
     if (!serverChannel_->ReceiveData(clientSSL, sendRecipeBuffer->sendBuffer,
-        recvSize)) {
+            recvSize)) {
         tool::Logging(myName_.c_str(), "recv the client ready error.\n");
         exit(EXIT_FAILURE);
     } else {
@@ -37,7 +39,7 @@ void RecipeSender::Run(ClientVar *curClient) {
     bool end = false;
     while (!end) {
         // read a batch of the recipe entries from the recipe file
-        curClient->_recipeReadHandler.read((char*)sendRecipeBuffer->dataBuffer, 
+        curClient->_recipeReadHandler.read((char*)sendRecipeBuffer->dataBuffer,
             sizeof(RecipeEntry_t) * sendRecipeBatchSize_);
         size_t readCnt = curClient->_recipeReadHandler.gcount();
         end = curClient->_recipeReadHandler.eof();
@@ -49,15 +51,15 @@ void RecipeSender::Run(ClientVar *curClient) {
         sendRecipeBuffer->header->dataSize = readCnt;
         sendRecipeBuffer->header->messageType = CLOUD_SEND_RECIPE;
 
-        //tool::PrintBinaryArray(sendRecipeBuffer->dataBuffer, 6);
-        if (!serverChannel_->SendData(clientSSL, sendRecipeBuffer->sendBuffer, 
-        sizeof(NetworkHead_t) + sendRecipeBuffer->header->dataSize)) {
+        // tool::PrintBinaryArray(sendRecipeBuffer->dataBuffer, 6);
+        if (!serverChannel_->SendData(clientSSL, sendRecipeBuffer->sendBuffer,
+                sizeof(NetworkHead_t) + sendRecipeBuffer->header->dataSize)) {
             tool::Logging(myName_.c_str(), "send the batch of restored chunks error.\n");
             exit(EXIT_FAILURE);
         }
 
         if (!serverChannel_->ReceiveData(clientSSL, sendRecipeBuffer->sendBuffer,
-            recvSize)) {
+                recvSize)) {
             tool::Logging(myName_.c_str(), "recv the client ready error.\n");
             exit(EXIT_FAILURE);
         } else {
@@ -73,11 +75,11 @@ void RecipeSender::Run(ClientVar *curClient) {
     // ------------------------
     tool::Logging(myName_.c_str(), "start to read the sec file recipe.\n");
     end = false;
-    FileRecipeHead_t* tmpRecipeHead = (FileRecipeHead_t*) malloc(sizeof(FileRecipeHead_t));
+    FileRecipeHead_t* tmpRecipeHead = (FileRecipeHead_t*)malloc(sizeof(FileRecipeHead_t));
     curClient->_secureRecipeReadHandler.read((char*)tmpRecipeHead, sizeof(FileRecipeHead_t));
     while (!end) {
         // read a batch of the recipe entries from the recipe file
-        curClient->_secureRecipeReadHandler.read((char*)sendRecipeBuffer->dataBuffer, 
+        curClient->_secureRecipeReadHandler.read((char*)sendRecipeBuffer->dataBuffer,
             sizeof(RecipeEntry_t) * sendRecipeBatchSize_);
         size_t readCnt = curClient->_secureRecipeReadHandler.gcount();
         end = curClient->_secureRecipeReadHandler.eof();
@@ -89,15 +91,15 @@ void RecipeSender::Run(ClientVar *curClient) {
         sendRecipeBuffer->header->dataSize = readCnt;
         sendRecipeBuffer->header->messageType = CLOUD_SEND_SECURE_RECIPE;
 
-        //tool::PrintBinaryArray(sendRecipeBuffer->dataBuffer, 6);
-        if (!serverChannel_->SendData(clientSSL, sendRecipeBuffer->sendBuffer, 
-        sizeof(NetworkHead_t) + sendRecipeBuffer->header->dataSize)) {
+        // tool::PrintBinaryArray(sendRecipeBuffer->dataBuffer, 6);
+        if (!serverChannel_->SendData(clientSSL, sendRecipeBuffer->sendBuffer,
+                sizeof(NetworkHead_t) + sendRecipeBuffer->header->dataSize)) {
             tool::Logging(myName_.c_str(), "send the batch of restored chunks error.\n");
             exit(EXIT_FAILURE);
         }
 
         if (!serverChannel_->ReceiveData(clientSSL, sendRecipeBuffer->sendBuffer,
-            recvSize)) {
+                recvSize)) {
             tool::Logging(myName_.c_str(), "recv the client ready error.\n");
             exit(EXIT_FAILURE);
         } else {
@@ -117,7 +119,7 @@ void RecipeSender::Run(ClientVar *curClient) {
     end = false;
     while (!end) {
         // read a batch of the recipe entries from the recipe file
-        curClient->_keyRecipeReadHandler.read((char*)sendRecipeBuffer->dataBuffer, 
+        curClient->_keyRecipeReadHandler.read((char*)sendRecipeBuffer->dataBuffer,
             sizeof(RecipeEntry_t) * sendRecipeBatchSize_);
         size_t readCnt = curClient->_keyRecipeReadHandler.gcount();
         end = curClient->_keyRecipeReadHandler.eof();
@@ -129,15 +131,15 @@ void RecipeSender::Run(ClientVar *curClient) {
         sendRecipeBuffer->header->dataSize = readCnt;
         sendRecipeBuffer->header->messageType = CLOUD_SEND_KEY_RECIPE;
 
-        //tool::PrintBinaryArray(sendRecipeBuffer->dataBuffer, 6);
-        if (!serverChannel_->SendData(clientSSL, sendRecipeBuffer->sendBuffer, 
-        sizeof(NetworkHead_t) + sendRecipeBuffer->header->dataSize)) {
+        // tool::PrintBinaryArray(sendRecipeBuffer->dataBuffer, 6);
+        if (!serverChannel_->SendData(clientSSL, sendRecipeBuffer->sendBuffer,
+                sizeof(NetworkHead_t) + sendRecipeBuffer->header->dataSize)) {
             tool::Logging(myName_.c_str(), "send the batch of restored chunks error.\n");
             exit(EXIT_FAILURE);
         }
 
         if (!serverChannel_->ReceiveData(clientSSL, sendRecipeBuffer->sendBuffer,
-            recvSize)) {
+                recvSize)) {
             tool::Logging(myName_.c_str(), "recv the client ready error.\n");
             exit(EXIT_FAILURE);
         } else {
@@ -157,12 +159,11 @@ void RecipeSender::Run(ClientVar *curClient) {
     }
 
     string clientIP;
-    if(!serverChannel_->ReceiveData(clientSSL, sendRecipeBuffer->sendBuffer, recvSize))
-    {
+    if (!serverChannel_->ReceiveData(clientSSL, sendRecipeBuffer->sendBuffer, recvSize)) {
         tool::Logging(myName_.c_str(), "send recipes done.\n");
         serverChannel_->GetClientIp(clientIP, clientSSL);
         serverChannel_->ClearAcceptedClientSd(clientSSL);
     }
 
-    return ;
+    return;
 }
