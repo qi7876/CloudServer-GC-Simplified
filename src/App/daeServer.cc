@@ -4,22 +4,22 @@
  * @brief the main server process
  * @version 0.1
  * @date 2021-01-28
- *
+ * 
  * @copyright Copyright (c) 2021
- *
+ * 
  */
 // for basic build block
-#include "../../include/absDatabase.h"
-#include "../../include/clientVar.h"
 #include "../../include/configure.h"
+#include "../../include/clientVar.h"
 #include "../../include/factoryDatabase.h"
+#include "../../include/absDatabase.h"
 
 // for main server thread
 #include "../../include/serverOptThread.h"
 
 // to receive the interrupt
-#include <boost/thread/thread.hpp>
 #include <signal.h>
+#include <boost/thread/thread.hpp>
 
 using namespace std;
 
@@ -33,16 +33,14 @@ vector<boost::thread*> thList;
 
 ServerOptThread* serverThreadObj;
 
-void Usage()
-{
+void Usage() {
     fprintf(stderr, "./CloudServer\n");
-    return;
+    return ;
 }
 
-void CTRLC(int s)
-{
-    // tool::Logging(myName.c_str(), "terminate the server with ctrl+c interrupt\n");
-    //  ------ clean up ------
+void CTRLC(int s) {
+    //tool::Logging(myName.c_str(), "terminate the server with ctrl+c interrupt\n");
+    // ------ clean up ------
     for (auto it : thList) {
         it->join();
     }
@@ -52,18 +50,17 @@ void CTRLC(int s)
     }
 
     delete serverThreadObj;
-    // tool::Logging(myName.c_str(), "clear all server thread the object.\n");
+    //tool::Logging(myName.c_str(), "clear all server thread the object.\n");
 
     delete fp2ChunkDB;
     delete serverChannelObj;
 
-    // tool::Logging(myName.c_str(), "close all DBs and network connection.\n");
+    //tool::Logging(myName.c_str(), "close all DBs and network connection.\n");
     tool::Logging(myName.c_str(), "Cloud Server Shutdown.\n");
     exit(EXIT_SUCCESS);
 }
 
-int main(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
 
     // ------ main process ------
     tool::Logging(myName.c_str(), "Cloud Server Start.\n");
@@ -80,9 +77,9 @@ int main(int argc, char* argv[])
     boost::thread* thTmp;
     boost::thread_attributes attrs;
     attrs.set_stack_size(THREAD_STACK_SIZE);
-
+    
     fp2ChunkDB = dbFactory.CreateDatabase(IN_MEMORY, config.GetFp2ChunkDBName());
-    serverChannelObj = new SSLConnection(config.GetStorageServerIP(),
+    serverChannelObj = new SSLConnection(config.GetStorageServerIP(), 
         config.GetStoragePort(), IN_SERVERSIDE);
 
     // init
@@ -98,7 +95,8 @@ int main(int argc, char* argv[])
     while (true) {
         tool::Logging(myName.c_str(), "waiting the request from the edge.\n");
         SSL* clientSSL = serverChannelObj->ListenSSL().second;
-        thTmp = new boost::thread(attrs, boost::bind(&ServerOptThread::Run, serverThreadObj, clientSSL));
+        thTmp = new boost::thread(attrs, boost::bind(&ServerOptThread::Run, serverThreadObj,
+            clientSSL));
         thList.push_back(thTmp);
     }
 

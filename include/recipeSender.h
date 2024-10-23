@@ -1,8 +1,8 @@
 #ifndef RECIPE_SENDER_H
 #define RECIPE_SENDER_H
 
-#include "clientVar.h"
 #include "configure.h"
+#include "clientVar.h"
 #include "sslConnection.h"
 
 class RecipeSender {
