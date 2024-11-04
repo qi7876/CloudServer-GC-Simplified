@@ -4,9 +4,9 @@
  * @brief define the necessary variables in deduplication
  * @version 0.1
  * @date 2019-12-19
- * 
+ *
  * @copyright Copyright (c) 2019
- * 
+ *
  */
 
 #ifndef BASICDEDUP_CONFIGURE_h
@@ -27,9 +27,9 @@ private:
     uint64_t avgChunkSize_;
     uint64_t minChunkSize_;
     uint64_t slidingWinSize_;
-    uint64_t readSize_; //128MB per time 
-    
-    // deduplication setting 
+    uint64_t readSize_; // 128MB per time
+
+    // deduplication setting
     string recipeRootPath_;
     string recipeSuffix_ = "-recipe";
     string secureRecipeSuffix_ = "-secureRecipe";
@@ -37,10 +37,10 @@ private:
     string containerRootPath_;
     string containerSuffix_ = "-container";
     string fp2ChunkDBName_;
-    
+
     // restore setting
     uint64_t readCacheSize_;
-    
+
     // for storage ip
     string storageServerIp_;
     int storageServerPort_;
@@ -50,7 +50,7 @@ private:
     uint64_t sendChunkBatchSize_ = 0;
     uint64_t sendRecipeBatchSize_ = 0;
 
-    // for local secret 
+    // for local secret
     string localSecret_;
 
     // for key server
@@ -59,96 +59,113 @@ private:
 
     /**
      * @brief read the configure file
-     * 
+     *
      * @param path the configure file name
      */
     void ReadConf(std::string path);
 
 public:
-
     /**
      * @brief Construct a new Configure object
-     * 
+     *
      * @param path the input configure file path
      */
     Configure(std::string path);
 
     /**
      * @brief Destroy the Configure object
-     * 
+     *
      */
     ~Configure();
-    
-    uint64_t GetChunkingType() {
+
+    uint64_t GetChunkingType()
+    {
         return chunkingType_;
     }
 
-    uint64_t GetMaxChunkSize() {
+    uint64_t GetMaxChunkSize()
+    {
         return maxChunkSize_;
     }
 
-    uint64_t GetMinChunkSize() {
+    uint64_t GetMinChunkSize()
+    {
         return minChunkSize_;
     }
 
-    uint64_t GetAvgChunkSize() {
+    uint64_t GetAvgChunkSize()
+    {
         return avgChunkSize_;
     }
 
-    uint64_t GetSlidingWinSize() {
+    uint64_t GetSlidingWinSize()
+    {
         return slidingWinSize_;
     }
 
-    uint64_t GetReadSize() {
+    uint64_t GetReadSize()
+    {
         return readSize_;
     }
-    
-    string GetRecipeRootPath() {
+
+    string GetRecipeRootPath()
+    {
         return recipeRootPath_;
     }
 
-    string GetRecipeSuffix() {
+    string GetRecipeSuffix()
+    {
         return recipeSuffix_;
     }
 
-    string GetContainerRootPath() {
+    string GetContainerRootPath()
+    {
         return containerRootPath_;
     }
 
-    string GetContainerSuffix() {
+    string GetContainerSuffix()
+    {
         return containerSuffix_;
     }
 
-    string GetLocalSecret() {
+    string GetLocalSecret()
+    {
         return localSecret_;
     }
 
-    string GetFp2ChunkDBName() {
+    string GetFp2ChunkDBName()
+    {
         return fp2ChunkDBName_;
     }
 
-    uint64_t GetReadCacheSize() {
+    uint64_t GetReadCacheSize()
+    {
         return readCacheSize_;
     }
 
-    string GetStorageServerIP() {
+    string GetStorageServerIP()
+    {
         return storageServerIp_;
     }
-    
-    int GetStoragePort() {
+
+    int GetStoragePort()
+    {
         return storageServerPort_;
     }
 
-    uint32_t GetClientID() {
+    uint32_t GetClientID()
+    {
         return clientID_;
     }
 
-    inline uint64_t GetSendChunkBatchSize() {
+    inline uint64_t GetSendChunkBatchSize()
+    {
         // return sendChunkBatchSize_;
         return 256;
     }
 
-    inline uint64_t GetSendRecipeBatchSize() {
+    inline uint64_t GetSendRecipeBatchSize()
+    {
         // return sendRecipeBatchSize_;
         if (chunkingType_ == 1) {
             return 512;
@@ -156,23 +173,26 @@ public:
             return 1024;
         }
     }
-    
+
     // key server config
-    string GetKeyServerIP() {
+    string GetKeyServerIP()
+    {
         return keyServerIp_;
     }
-    int GetKeyServerPort() {
+    int GetKeyServerPort()
+    {
         return keyServerPort_;
     }
 
-    inline string GetSecureRecipeSuffix() {
+    inline string GetSecureRecipeSuffix()
+    {
         return secureRecipeSuffix_;
     }
 
-    inline string GetKeyRecipeSuffix() {
+    inline string GetKeyRecipeSuffix()
+    {
         return keyRecipeSuffix_;
     }
-
 };
 
-#endif //BASICDEDUP_CONFIGURE_h
+#endif // BASICDEDUP_CONFIGURE_h
